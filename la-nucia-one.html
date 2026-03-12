@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La Nucía One — Diseñado para el Mediterráneo</title>
+  <meta name="description" content="Pisos de 2, 3 y 4 dormitorios con amplias terrazas, zonas comunes y vistas al Mediterráneo en La Nucía, Alicante.">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Mapbox CSS -->
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --green-dark: #1C3D2E;
+      --green-mid: #2D5A40;
+      --gold: #C8922A;
+      --gold-light: #D4A040;
+      --cream: #FAF6F0;
+      --cream-dark: #F0E8DC;
+      --text-dark: #1a1a1a;
+      --text-light: #6b6b6b;
+      --border: #E0D8CC;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--cream);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* ── LANGUAGE SWITCHER ── */
+    #lang-switcher {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      gap: 4px;
+      background: rgba(28, 61, 46, 0.55);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(200, 146, 42, 0.35);
+      border-radius: 8px;
+      padding: 4px;
+    }
+
+    #lang-switcher button {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.7);
+      font-family: 'Inter', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      cursor: pointer;
+      padding: 5px 10px;
+      border-radius: 5px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    #lang-switcher button.active {
+      background: var(--gold);
+      color: #fff;
+    }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      height: 100vh;
+      min-height: 600px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('hero-nucia-BMT2pyRP.jpg');
+      background-size: cover;
+      background-position: center;
+      animation: kenBurns 18s ease-in-out infinite alternate;
+      transform-origin: center center;
+    }
+
+    @keyframes kenBurns {
+      from { transform: scale(1); }
+      to   { transform: scale(1.08); }
+    }
+
+    #hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.38) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.72) 100%);
+    }
+
+    #hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 820px;
+      padding: 0 24px;
+    }
+
+    .hero-label {
+      display: inline-block;
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold-light);
+      margin-bottom: 20px;
+    }
+
+    #hero-content h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.6rem, 6vw, 4.5rem);
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 20px;
+    }
+
+    #hero-content h1 em {
+      font-style: italic;
+      color: #fff;
+    }
+
+    #hero-content p {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      font-weight: 300;
+      color: rgba(255,255,255,0.88);
+      line-height: 1.7;
+      max-width: 560px;
+      margin: 0 auto 36px;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      background: var(--green-dark);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 16px 38px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--green-mid);
+      transform: translateY(-1px);
+    }
+
+    .hero-scroll-indicator {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .scroll-dot {
+      width: 28px;
+      height: 28px;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scroll-dot::after {
+      content: '';
+      width: 6px;
+      height: 6px;
+      background: rgba(255,255,255,0.7);
+      border-radius: 50%;
+      animation: scrollBounce 1.8s ease-in-out infinite;
+    }
+
+    @keyframes scrollBounce {
+      0%, 100% { transform: translateY(-3px); }
+      50%       { transform: translateY(3px); }
+    }
+
+    /* ── SECTION COMMONS ── */
+    section { padding: 96px 24px; }
+
+    .section-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 400;
+      color: var(--text-dark);
+      text-align: center;
+      line-height: 1.2;
+      margin-bottom: 56px;
+    }
+
+    .section-title em { font-style: italic; }
+
+    /* ── FEATURES ── */
+    #features {
+      background: var(--cream);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 768px) {
+      .features-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .feature-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 32px 28px;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.25s;
+    }
+
+    .feature-card:hover {
+      border-color: var(--green-mid);
+      box-shadow: 0 8px 32px rgba(28,61,46,0.10);
+      transform: translateY(-3px);
+    }
+
+    .feature-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--cream-dark);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      transition: background 0.25s;
+    }
+
+    .feature-card:hover .feature-icon {
+      background: var(--green-dark);
+    }
+
+    .feature-icon svg {
+      width: 22px;
+      height: 22px;
+      color: var(--green-dark);
+      transition: color 0.25s;
+    }
+
+    .feature-card:hover .feature-icon svg {
+      color: #fff;
+    }
+
+    .feature-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 10px;
+      color: var(--text-dark);
+    }
+
+    .feature-card p {
+      font-size: 0.92rem;
+      color: var(--text-light);
+      line-height: 1.65;
+    }
+
+    /* ── LOCATION ── */
+    #location {
+      background: var(--green-dark);
+      padding: 80px 24px;
+    }
+
+    .location-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .location-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    .location-label {
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .location-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 400;
+      color: #fff;
+      line-height: 1.15;
+      margin-bottom: 24px;
+    }
+
+    .location-title em { font-style: italic; }
+
+    .location-body {
+      font-size: 0.98rem;
+      color: rgba(255,255,255,0.78);
+      line-height: 1.75;
+      margin-bottom: 36px;
+    }
+
+    .location-points {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px 32px;
+    }
+
+    .location-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.82);
+    }
+
+    .location-point svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      color: var(--gold);
+      margin-top: 1px;
+    }
+
+    #map {
+      width: 100%;
+      height: 320px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    /* ── FORM ── */
+    #contact {
+      background: var(--cream);
+    }
+
+    .form-card {
+      max-width: 680px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px 44px;
+    }
+
+    @media (max-width: 600px) {
+      .form-card { padding: 32px 20px; }
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-dark);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      color: var(--text-dark);
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--green-mid);
+      box-shadow: 0 0 0 3px rgba(45,90,64,0.10);
+    }
+
+    .form-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6b6b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    /* Chips */
+    .chips-label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--text-dark);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .chips-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .chip {
+      padding: 8px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-size: 0.85rem;
+      font-weight: 400;
+      color: var(--text-dark);
+      cursor: pointer;
+      background: #fff;
+      transition: border-color 0.18s, background 0.18s, color 0.18s;
+      user-select: none;
+    }
+
+    .chip:hover { border-color: var(--green-mid); }
+
+    .chip.selected {
+      background: var(--green-dark);
+      border-color: var(--green-dark);
+      color: #fff;
+    }
+
+    /* Privacy checkbox */
+    .privacy-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .privacy-row input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      accent-color: var(--green-dark);
+      cursor: pointer;
+      margin-top: 2px;
+    }
+
+    .privacy-row label {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+
+    .privacy-row a {
+      color: var(--green-dark);
+      text-decoration: underline;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--green-dark);
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 17px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-submit:hover:not(:disabled) { background: var(--green-mid); }
+
+    .btn-submit:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 24px 0 8px;
+    }
+
+    .form-success-icon {
+      width: 56px;
+      height: 56px;
+      background: rgba(28,61,46,0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .form-success-icon svg {
+      width: 28px;
+      height: 28px;
+      color: var(--green-dark);
+    }
+
+    .form-success h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 10px;
+    }
+
+    .form-success p {
+      font-size: 0.95rem;
+      color: var(--text-light);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--green-dark);
+      padding: 48px 24px;
+      text-align: center;
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #fff;
+      margin-bottom: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-sub {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 20px;
+    }
+
+    .footer-divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(200,146,42,0.5);
+      margin: 0 auto 20px;
+    }
+
+    .footer-copy {
+      font-size: 0.78rem;
+      color: rgba(255,255,255,0.38);
+    }
+
+    /* ── REVEAL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    /* ── MAPBOX POPUP ── */
+    .mapboxgl-popup-content {
+      background: var(--green-dark) !important;
+      color: #fff !important;
+      border-radius: 8px !important;
+      padding: 12px 16px !important;
+      font-family: 'Inter', sans-serif !important;
+      font-size: 13px !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35) !important;
+    }
+
+    .mapboxgl-popup-tip {
+      border-top-color: var(--green-dark) !important;
+    }
+
+    .mapboxgl-popup-close-button {
+      color: rgba(255,255,255,0.6) !important;
+    }
+
+    .popup-inner strong {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 2px;
+      color: var(--gold-light);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LANGUAGE SWITCHER -->
+  <div id="lang-switcher">
+    <button id="btn-es" class="active" onclick="setLang('es')">ES</button>
+    <button id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+
+  <!-- ══ HERO ══ -->
+  <section id="hero">
+    <div id="hero-bg"></div>
+    <div id="hero-overlay"></div>
+    <div id="hero-content">
+      <span class="hero-label" data-i18n="hero_label">PRÓXIMAMENTE — LA NUCÍA ONE</span>
+      <h1 data-i18n-html="hero_h1">Designed for<br><em>Mediterranean Living</em></h1>
+      <p data-i18n="hero_sub">Pisos de 2, 3 y 4 dormitorios con amplias terrazas, zonas comunes y vistas al Mediterráneo en una de las mejores ubicaciones de la Costa Blanca.</p>
+      <a href="#contact" class="btn-primary" data-i18n="hero_cta">¡QUIERO CONOCER MÁS DETALLES!</a>
+    </div>
+    <div class="hero-scroll-indicator">
+      <div class="scroll-dot"></div>
+    </div>
+  </section>
+
+  <!-- ══ FEATURES ══ -->
+  <section id="features">
+    <span class="section-label reveal" data-i18n="feat_label">CARACTERÍSTICAS</span>
+    <h2 class="section-title reveal reveal-delay-1" data-i18n-html="feat_title">Tu hogar en la <em>Costa Blanca</em></h2>
+
+    <div class="features-grid">
+
+      <!-- 1 -->
+      <div class="feature-card reveal reveal-delay-1">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/>
+          </svg>
+        </div>
+        <h3 data-i18n="f1_title">2, 3 y 4 dormitorios</h3>
+        <p data-i18n="f1_desc">Amplias viviendas diseñadas para el confort familiar con acabados de primera calidad.</p>
+      </div>
+
+      <!-- 2 -->
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M2 12c0 5.52 4.48 10 10 10s10-4.48 10-10"/><path d="M2 12C2 6.48 6.48 2 12 2"/><path d="M7 12c0 2.76 2.24 5 5 5s5-2.24 5-5"/><path d="M7 12C7 9.24 9.24 7 12 7"/>
+          </svg>
+        </div>
+        <h3 data-i18n="f2_title">Piscina comunitaria</h3>
+        <p data-i18n="f2_desc">Disfruta de una gran zona de piscina con solárium y áreas de descanso.</p>
+      </div>
+
+      <!-- 3 -->
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/>
+          </svg>
+        </div>
+        <h3 data-i18n="f3_title">Zonas ajardinadas</h3>
+        <p data-i18n="f3_desc">Amplios espacios verdes con vegetación mediterránea para tu tranquilidad.</p>
+      </div>
+
+      <!-- 4 -->
+      <div class="feature-card reveal reveal-delay-2">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        </div>
+        <h3 data-i18n="f4_title">Amplias terrazas</h3>
+        <p data-i18n="f4_desc">Terrazas generosas para disfrutar del clima mediterráneo durante todo el año.</p>
+      </div>
+
+      <!-- 5 -->
+      <div class="feature-card reveal reveal-delay-3">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+          </svg>
+        </div>
+        <h3 data-i18n="f5_title">Plaza de garaje</h3>
+        <p data-i18n="f5_desc">Plazas de aparcamiento privado y trasteros incluidos en la promoción.</p>
+      </div>
+
+      <!-- 6 -->
+      <div class="feature-card reveal reveal-delay-4">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+        </div>
+        <h3 data-i18n="f6_title">Eficiencia energética</h3>
+        <p data-i18n="f6_desc">Materiales de última generación y calificación energética de alto nivel.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══ LOCATION ══ -->
+  <section id="location">
+    <div class="location-inner">
+      <div>
+        <span class="location-label reveal" data-i18n="loc_label">UBICACIÓN PRIVILEGIADA</span>
+        <h2 class="location-title reveal reveal-delay-1" data-i18n-html="loc_title">La Nucía,<br><em>Alicante</em></h2>
+        <p class="location-body reveal reveal-delay-2" data-i18n="loc_body">La Nucía es uno de los municipios con mayor calidad de vida de la Costa Blanca. Con un clima excepcional de más de 300 días de sol al año, excelentes infraestructuras deportivas y culturales, y una ubicación estratégica entre la montaña y el mar.</p>
+        <div class="location-points">
+          <div class="location-point reveal reveal-delay-3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            <span data-i18n="loc_p1">A 10 min de Benidorm</span>
+          </div>
+          <div class="location-point reveal reveal-delay-3">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+            <span data-i18n="loc_p2">A 45 min del aeropuerto de Alicante</span>
+          </div>
+          <div class="location-point reveal reveal-delay-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 17l4-8 4 4 4-6 4 10"/>
+            </svg>
+            <span data-i18n="loc_p3">Sierra de Aitana como telón de fondo</span>
+          </div>
+          <div class="location-point reveal reveal-delay-4">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M2 12.5c3.5-4 9-4 12 0s8.5 4 12 0"/><path d="M2 17.5c3.5-4 9-4 12 0s8.5 4 12 0"/><path d="M2 7.5c3.5-4 9-4 12 0s8.5 4 12 0"/>
+            </svg>
+            <span data-i18n="loc_p4">Playas a menos de 8 km</span>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div id="map" class="reveal reveal-delay-2"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ CONTACT FORM ══ -->
+  <section id="contact">
+    <span class="section-label reveal" data-i18n="form_label">LA NUCÍA TE ESPERA</span>
+    <h2 class="section-title reveal reveal-delay-1" data-i18n-html="form_title">Conoce todos los <em>detalles</em></h2>
+    <p style="text-align:center;color:var(--text-light);font-size:0.95rem;margin-top:-32px;margin-bottom:40px;" class="reveal reveal-delay-2" data-i18n="form_subtitle">Cuéntanos cómo sería tu casa ideal y te contactaremos sin compromiso.</p>
+
+    <div class="form-card reveal reveal-delay-2">
+
+      <div id="form-success" class="form-success">
+        <div class="form-success-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+        </div>
+        <h3 data-i18n="success_title">¡Gracias por tu interés!</h3>
+        <p data-i18n="success_body">Nos pondremos en contacto contigo en las próximas 24 horas.</p>
+      </div>
+
+      <form id="contact-form" onsubmit="handleSubmit(event)">
+
+        <div class="form-group">
+          <label data-i18n="f_name_label">Nombre y Apellidos *</label>
+          <input type="text" id="f-name" required data-i18n-placeholder="f_name_ph" placeholder="Tu nombre completo">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="f_phone_label">Teléfono *</label>
+            <input type="tel" id="f-phone" required data-i18n-placeholder="f_phone_ph" placeholder="+34 600 000 000">
+          </div>
+          <div class="form-group">
+            <label data-i18n="f_email_label">Correo electrónico *</label>
+            <input type="email" id="f-email" required data-i18n-placeholder="f_email_ph" placeholder="tu@email.com">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="f_dest_label">Destino de Vivienda</label>
+            <select id="f-dest" data-i18n-select="f_dest_options">
+              <option value="">Selecciona...</option>
+              <option value="habitual">Vivienda habitual</option>
+              <option value="vacacional">Vacacional</option>
+              <option value="inversion">Inversión</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-i18n="f_cp_label">Código Postal</label>
+            <input type="text" id="f-cp" data-i18n-placeholder="f_cp_ph" placeholder="03530">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label data-i18n="f_age_label">Edad</label>
+            <select id="f-age" data-i18n-select="f_age_options">
+              <option value="">Selecciona...</option>
+              <option value="25-34">25 – 34</option>
+              <option value="35-44">35 – 44</option>
+              <option value="45-54">45 – 54</option>
+              <option value="55-64">55 – 64</option>
+              <option value="65+">65+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label data-i18n="f_lang_label">Idioma de Contacto</label>
+            <select id="f-lang" data-i18n-select="f_lang_options">
+              <option value="">Selecciona...</option>
+              <option value="es">Español</option>
+              <option value="en">Inglés</option>
+              <option value="fr">Francés</option>
+              <option value="de">Alemán</option>
+              <option value="nl">Neerlandés</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <span class="chips-label" data-i18n="f_rooms_label">Nº de Dormitorios</span>
+          <div class="chips-group" id="chips-rooms">
+            <span class="chip" data-value="2" data-i18n="chip_2d">2 Dormitorios</span>
+            <span class="chip" data-value="3" data-i18n="chip_3d">3 Dormitorios</span>
+            <span class="chip" data-value="4" data-i18n="chip_4d">4 Dormitorios</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label data-i18n="f_budget_label">Presupuesto estimado</label>
+          <select id="f-budget" data-i18n-select="f_budget_options">
+            <option value="">Selecciona...</option>
+            <option value="250-350">250.000 € – 350.000 €</option>
+            <option value="350-450">350.000 € – 450.000 €</option>
+            <option value="450-600">450.000 € – 600.000 €</option>
+            <option value="600+">+ 600.000 €</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <span class="chips-label" data-i18n="f_zones_label">Tus zonas comunes soñadas</span>
+          <div class="chips-group" id="chips-zones">
+            <span class="chip" data-value="piscina" data-i18n="zone_pool">Piscina Infinity</span>
+            <span class="chip" data-value="coworking" data-i18n="zone_cow">Coworking</span>
+            <span class="chip" data-value="gimnasio" data-i18n="zone_gym">Gimnasio</span>
+            <span class="chip" data-value="salas" data-i18n="zone_hall">Salas polivalentes</span>
+            <span class="chip" data-value="jardines" data-i18n="zone_garden">Zonas ajardinadas</span>
+            <span class="chip" data-value="infantil" data-i18n="zone_kids">Zona Infantil</span>
+            <span class="chip" data-value="barbacoa" data-i18n="zone_bbq">Barbacoa</span>
+            <span class="chip" data-value="petcare" data-i18n="zone_pet">Pet Care</span>
+            <span class="chip" data-value="solarium" data-i18n="zone_sol">Solárium</span>
+          </div>
+        </div>
+
+        <div class="privacy-row">
+          <input type="checkbox" id="f-privacy" required>
+          <label for="f-privacy">
+            <span data-i18n="f_privacy_pre">Acepto la </span><a href="#" data-i18n="f_privacy_link">política de privacidad</a>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btn-submit" data-i18n="f_send">ENVIAR</button>
+
+      </form>
+    </div>
+  </section>
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <div class="footer-logo">La Nucía One</div>
+    <div class="footer-sub" data-i18n="footer_sub">Costa Blanca · Alicante, España</div>
+    <div class="footer-divider"></div>
+    <div class="footer-copy" data-i18n="footer_copy">© 2025 La Nucía One. Todos los derechos reservados.</div>
+  </footer>
+
+  <!-- Mapbox JS (must be before init script) -->
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+
+  <script>
+    /* ══════════════════════════════════
+       TRANSLATIONS
+    ══════════════════════════════════ */
+    const translations = {
+      es: {
+        hero_label: 'PRÓXIMAMENTE — LA NUCÍA ONE',
+        hero_h1: 'Designed for<br><em>Mediterranean Living</em>',
+        hero_sub: 'Pisos de 2, 3 y 4 dormitorios con amplias terrazas, zonas comunes y vistas al Mediterráneo en una de las mejores ubicaciones de la Costa Blanca.',
+        hero_cta: '¡QUIERO CONOCER MÁS DETALLES!',
+
+        feat_label: 'CARACTERÍSTICAS',
+        feat_title: 'Tu hogar en la <em>Costa Blanca</em>',
+
+        f1_title: '2, 3 y 4 dormitorios',
+        f1_desc: 'Amplias viviendas diseñadas para el confort familiar con acabados de primera calidad.',
+        f2_title: 'Piscina comunitaria',
+        f2_desc: 'Disfruta de una gran zona de piscina con solárium y áreas de descanso.',
+        f3_title: 'Zonas ajardinadas',
+        f3_desc: 'Amplios espacios verdes con vegetación mediterránea para tu tranquilidad.',
+        f4_title: 'Amplias terrazas',
+        f4_desc: 'Terrazas generosas para disfrutar del clima mediterráneo durante todo el año.',
+        f5_title: 'Plaza de garaje',
+        f5_desc: 'Plazas de aparcamiento privado y trasteros incluidos en la promoción.',
+        f6_title: 'Eficiencia energética',
+        f6_desc: 'Materiales de última generación y calificación energética de alto nivel.',
+
+        loc_label: 'UBICACIÓN PRIVILEGIADA',
+        loc_title: 'La Nucía,<br><em>Alicante</em>',
+        loc_body: 'La Nucía es uno de los municipios con mayor calidad de vida de la Costa Blanca. Con un clima excepcional de más de 300 días de sol al año, excelentes infraestructuras deportivas y culturales, y una ubicación estratégica entre la montaña y el mar.',
+        loc_p1: 'A 10 min de Benidorm',
+        loc_p2: 'A 45 min del aeropuerto de Alicante',
+        loc_p3: 'Sierra de Aitana como telón de fondo',
+        loc_p4: 'Playas a menos de 8 km',
+
+        form_label: 'LA NUCÍA TE ESPERA',
+        form_title: 'Conoce todos los <em>detalles</em>',
+        form_subtitle: 'Cuéntanos cómo sería tu casa ideal y te contactaremos sin compromiso.',
+
+        f_name_label: 'Nombre y Apellidos *',
+        f_name_ph: 'Tu nombre completo',
+        f_phone_label: 'Teléfono *',
+        f_phone_ph: '+34 600 000 000',
+        f_email_label: 'Correo electrónico *',
+        f_email_ph: 'tu@email.com',
+        f_dest_label: 'Destino de Vivienda',
+        f_dest_options: ['Selecciona...', 'Vivienda habitual', 'Vacacional', 'Inversión'],
+        f_cp_label: 'Código Postal',
+        f_cp_ph: '03530',
+        f_age_label: 'Edad',
+        f_age_options: ['Selecciona...', '25 – 34', '35 – 44', '45 – 54', '55 – 64', '65+'],
+        f_lang_label: 'Idioma de Contacto',
+        f_lang_options: ['Selecciona...', 'Español', 'Inglés', 'Francés', 'Alemán', 'Neerlandés'],
+        f_rooms_label: 'Nº de Dormitorios',
+        chip_2d: '2 Dormitorios',
+        chip_3d: '3 Dormitorios',
+        chip_4d: '4 Dormitorios',
+        f_budget_label: 'Presupuesto estimado',
+        f_budget_options: ['Selecciona...', '250.000 € – 350.000 €', '350.000 € – 450.000 €', '450.000 € – 600.000 €', '+ 600.000 €'],
+        f_zones_label: 'Tus zonas comunes soñadas',
+        zone_pool: 'Piscina Infinity',
+        zone_cow: 'Coworking',
+        zone_gym: 'Gimnasio',
+        zone_hall: 'Salas polivalentes',
+        zone_garden: 'Zonas ajardinadas',
+        zone_kids: 'Zona Infantil',
+        zone_bbq: 'Barbacoa',
+        zone_pet: 'Pet Care',
+        zone_sol: 'Solárium',
+        f_privacy_pre: 'Acepto la ',
+        f_privacy_link: 'política de privacidad',
+        f_send: 'ENVIAR',
+
+        success_title: '¡Gracias por tu interés!',
+        success_body: 'Nos pondremos en contacto contigo en las próximas 24 horas.',
+
+        footer_sub: 'Costa Blanca · Alicante, España',
+        footer_copy: '© 2025 La Nucía One. Todos los derechos reservados.',
+
+        popup_name: 'La Nucía One',
+        popup_desc: 'La Nucía, Alicante',
+      },
+      en: {
+        hero_label: 'COMING SOON — LA NUCÍA ONE',
+        hero_h1: 'Designed for<br><em>Mediterranean Living</em>',
+        hero_sub: '2, 3 and 4 bedroom apartments with spacious terraces, communal areas and Mediterranean views in one of the best locations on the Costa Blanca.',
+        hero_cta: 'I WANT TO KNOW MORE DETAILS!',
+
+        feat_label: 'FEATURES',
+        feat_title: 'Your home on the <em>Costa Blanca</em>',
+
+        f1_title: '2, 3 & 4 bedrooms',
+        f1_desc: 'Spacious homes designed for family comfort with top-quality finishes.',
+        f2_title: 'Communal pool',
+        f2_desc: 'Enjoy a large pool area with solarium and relaxation zones.',
+        f3_title: 'Landscaped gardens',
+        f3_desc: 'Generous green spaces with Mediterranean vegetation for your peace of mind.',
+        f4_title: 'Spacious terraces',
+        f4_desc: 'Generous terraces to enjoy the Mediterranean climate all year round.',
+        f5_title: 'Private parking',
+        f5_desc: 'Private parking spaces and storage rooms included in the development.',
+        f6_title: 'Energy efficiency',
+        f6_desc: 'Latest-generation materials and a high energy rating.',
+
+        loc_label: 'PRIME LOCATION',
+        loc_title: 'La Nucía,<br><em>Alicante</em>',
+        loc_body: 'La Nucía is one of the highest quality-of-life municipalities on the Costa Blanca. With an exceptional climate of over 300 sunny days a year, excellent sports and cultural facilities, and a strategic location between the mountains and the sea.',
+        loc_p1: '10 min from Benidorm',
+        loc_p2: '45 min from Alicante Airport',
+        loc_p3: 'Sierra de Aitana as a backdrop',
+        loc_p4: 'Beaches less than 8 km away',
+
+        form_label: 'LA NUCÍA AWAITS YOU',
+        form_title: 'Discover all the <em>details</em>',
+        form_subtitle: 'Tell us what your ideal home looks like and we\'ll get back to you with no obligation.',
+
+        f_name_label: 'Full Name *',
+        f_name_ph: 'Your full name',
+        f_phone_label: 'Phone *',
+        f_phone_ph: '+34 600 000 000',
+        f_email_label: 'Email address *',
+        f_email_ph: 'you@email.com',
+        f_dest_label: 'Property Purpose',
+        f_dest_options: ['Select...', 'Primary residence', 'Holiday home', 'Investment'],
+        f_cp_label: 'Postcode',
+        f_cp_ph: '03530',
+        f_age_label: 'Age',
+        f_age_options: ['Select...', '25 – 34', '35 – 44', '45 – 54', '55 – 64', '65+'],
+        f_lang_label: 'Contact Language',
+        f_lang_options: ['Select...', 'Spanish', 'English', 'French', 'German', 'Dutch'],
+        f_rooms_label: 'Number of Bedrooms',
+        chip_2d: '2 Bedrooms',
+        chip_3d: '3 Bedrooms',
+        chip_4d: '4 Bedrooms',
+        f_budget_label: 'Estimated budget',
+        f_budget_options: ['Select...', '€250,000 – €350,000', '€350,000 – €450,000', '€450,000 – €600,000', '+ €600,000'],
+        f_zones_label: 'Your dream communal areas',
+        zone_pool: 'Infinity Pool',
+        zone_cow: 'Coworking',
+        zone_gym: 'Gym',
+        zone_hall: 'Multipurpose rooms',
+        zone_garden: 'Landscaped gardens',
+        zone_kids: 'Kids area',
+        zone_bbq: 'BBQ area',
+        zone_pet: 'Pet Care',
+        zone_sol: 'Solarium',
+        f_privacy_pre: 'I accept the ',
+        f_privacy_link: 'privacy policy',
+        f_send: 'SEND',
+
+        success_title: 'Thank you for your interest!',
+        success_body: 'We will get in touch with you within the next 24 hours.',
+
+        footer_sub: 'Costa Blanca · Alicante, Spain',
+        footer_copy: '© 2025 La Nucía One. All rights reserved.',
+
+        popup_name: 'La Nucía One',
+        popup_desc: 'La Nucía, Alicante',
+      }
+    };
+
+    let currentLang = 'es';
+
+    function setLang(lang) {
+      currentLang = lang;
+      const t = translations[lang];
+
+      // Toggle active button
+      document.getElementById('btn-es').classList.toggle('active', lang === 'es');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+
+      // data-i18n (text content)
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key] !== undefined) el.textContent = t[key];
+      });
+
+      // data-i18n-html (innerHTML, for em tags etc.)
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.getAttribute('data-i18n-html');
+        if (t[key] !== undefined) el.innerHTML = t[key];
+      });
+
+      // data-i18n-placeholder
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        if (t[key] !== undefined) el.placeholder = t[key];
+      });
+
+      // data-i18n-select (array of option texts, preserving values)
+      document.querySelectorAll('[data-i18n-select]').forEach(sel => {
+        const key = sel.getAttribute('data-i18n-select');
+        const opts = t[key];
+        if (Array.isArray(opts)) {
+          Array.from(sel.options).forEach((opt, i) => {
+            if (opts[i] !== undefined) opt.text = opts[i];
+          });
+        }
+      });
+
+      // Update Mapbox popup if map is ready
+      if (window._mapPopup) {
+        window._mapPopup.setHTML(
+          `<div class="popup-inner"><strong>${t.popup_name}</strong>${t.popup_desc}</div>`
+        );
+      }
+    }
+
+    /* ══════════════════════════════════
+       CHIPS — SINGLE SELECT (rooms)
+    ══════════════════════════════════ */
+    document.querySelectorAll('#chips-rooms .chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('#chips-rooms .chip').forEach(c => c.classList.remove('selected'));
+        chip.classList.add('selected');
+      });
+    });
+
+    /* ══════════════════════════════════
+       CHIPS — MULTI SELECT (zones)
+    ══════════════════════════════════ */
+    document.querySelectorAll('#chips-zones .chip').forEach(chip => {
+      chip.addEventListener('click', () => chip.classList.toggle('selected'));
+    });
+
+    /* ══════════════════════════════════
+       FORM SUBMIT
+    ══════════════════════════════════ */
+    function handleSubmit(e) {
+      e.preventDefault();
+      const t = translations[currentLang];
+      const btn = document.getElementById('btn-submit');
+      btn.disabled = true;
+
+      // Simulate async submit
+      setTimeout(() => {
+        document.getElementById('contact-form').style.display = 'none';
+        const succ = document.getElementById('form-success');
+        succ.style.display = 'block';
+        // Apply current language to success message
+        setLang(currentLang);
+      }, 600);
+    }
+
+    /* ══════════════════════════════════
+       MAPBOX MAP
+    ══════════════════════════════════ */
+    // Replace with your Mapbox public token: https://account.mapbox.com/access-tokens/
+    mapboxgl.accessToken = 'MAPBOX_ACCESS_TOKEN';
+
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/dark-v11',
+      center: [-0.125, 38.623],
+      zoom: 12.5,
+      scrollZoom: false,
+      attributionControl: true,
+    });
+
+    // Custom gold marker
+    const markerEl = document.createElement('div');
+    markerEl.innerHTML = `
+      <svg width="36" height="44" viewBox="0 0 36 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M18 0C8.059 0 0 8.059 0 18c0 12.56 16.2 25.04 17.1 25.72a1.5 1.5 0 001.8 0C19.8 43.04 36 30.56 36 18 36 8.059 27.941 0 18 0z" fill="#C8922A"/>
+        <circle cx="18" cy="18" r="7" fill="#fff"/>
+        <circle cx="18" cy="18" r="4" fill="#C8922A"/>
+      </svg>`;
+    markerEl.style.cursor = 'pointer';
+
+    const t0 = translations[currentLang];
+    const popup = new mapboxgl.Popup({ offset: 32, closeButton: true })
+      .setHTML(`<div class="popup-inner"><strong>${t0.popup_name}</strong>${t0.popup_desc}</div>`);
+
+    window._mapPopup = popup;
+
+    new mapboxgl.Marker(markerEl)
+      .setLngLat([-0.125, 38.623])
+      .setPopup(popup)
+      .addTo(map);
+
+    map.on('load', () => popup.addTo(map));
+
+    // Navigation control (zoom +/-)
+    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+
+    /* ══════════════════════════════════
+       SCROLL REVEAL
+    ══════════════════════════════════ */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  </script>
+</body>
+</html>
