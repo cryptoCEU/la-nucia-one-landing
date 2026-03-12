@@ -1,19 +1,9 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "*.html",
-      "use": "@vercel/static"
-    }
-  ],
+  "buildCommand": "bash build.sh",
+  "outputDirectory": "dist",
   "routes": [
-    {
-      "src": "/",
-      "dest": "/la-nucia-one.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
+    { "src": "/", "dest": "/la-nucia-one.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ]
 }
