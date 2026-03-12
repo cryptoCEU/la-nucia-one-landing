@@ -9,8 +9,8 @@
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Mapbox CSS -->
-  <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
   <style>
     :root {
@@ -85,7 +85,7 @@
     #hero-bg {
       position: absolute;
       inset: 0;
-      background-image: url('hero-nucia-BMT2pyRP.jpg'),
+      background-image: url('https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1920&q=80'),
         linear-gradient(160deg, #1C3D2E 0%, #2D5A40 25%, #1a4a6e 60%, #0d2d4f 100%);
       background-size: cover;
       background-position: center;
@@ -629,23 +629,33 @@
     .reveal-delay-4 { transition-delay: 0.4s; }
     .reveal-delay-5 { transition-delay: 0.5s; }
 
-    /* ── MAPBOX POPUP ── */
-    .mapboxgl-popup-content {
+    /* ── LEAFLET POPUP ── */
+    .leaflet-popup-content-wrapper {
       background: var(--green-dark) !important;
       color: #fff !important;
       border-radius: 8px !important;
-      padding: 12px 16px !important;
+      padding: 0 !important;
       font-family: 'Inter', sans-serif !important;
       font-size: 13px !important;
       box-shadow: 0 4px 20px rgba(0,0,0,0.35) !important;
+      border: none !important;
     }
 
-    .mapboxgl-popup-tip {
-      border-top-color: var(--green-dark) !important;
+    .leaflet-popup-content {
+      margin: 12px 16px !important;
+      color: #fff !important;
     }
 
-    .mapboxgl-popup-close-button {
+    .leaflet-popup-tip {
+      background: var(--green-dark) !important;
+    }
+
+    .leaflet-popup-close-button {
       color: rgba(255,255,255,0.6) !important;
+    }
+
+    .leaflet-container {
+      background: #1a1a2e;
     }
 
     .popup-inner strong {
@@ -928,8 +938,8 @@
     <div class="footer-copy" data-i18n="footer_copy">© 2025 La Nucía One. Todos los derechos reservados.</div>
   </footer>
 
-  <!-- Mapbox JS (must be before init script) -->
-  <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
     /* ══════════════════════════════════
@@ -1131,9 +1141,9 @@
         }
       });
 
-      // Update Mapbox popup if map is ready
-      if (window._mapPopup) {
-        window._mapPopup.setHTML(
+      // Update Leaflet popup if map is ready
+      if (window._leafletMarker) {
+        window._leafletMarker.setPopupContent(
           `<div class="popup-inner"><strong>${t.popup_name}</strong>${t.popup_desc}</div>`
         );
       }
@@ -1176,45 +1186,39 @@
     }
 
     /* ══════════════════════════════════
-       MAPBOX MAP
+       LEAFLET MAP (OpenStreetMap)
     ══════════════════════════════════ */
-    // Replace with your Mapbox public token: https://account.mapbox.com/access-tokens/
-    mapboxgl.accessToken = 'MAPBOX_ACCESS_TOKEN';
+    const map = L.map('map', {
+      scrollWheelZoom: false,
+      zoomControl: true,
+    }).setView([38.623, -0.125], 13);
 
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/dark-v11',
-      center: [-0.125, 38.623],
-      zoom: 12.5,
-      scrollZoom: false,
-      attributionControl: true,
-    });
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>',
+      subdomains: 'abcd',
+      maxZoom: 20,
+    }).addTo(map);
 
     // Custom gold marker
-    const markerEl = document.createElement('div');
-    markerEl.innerHTML = `
-      <svg width="36" height="44" viewBox="0 0 36 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+    const markerIcon = L.divIcon({
+      html: `<svg width="36" height="44" viewBox="0 0 36 44" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M18 0C8.059 0 0 8.059 0 18c0 12.56 16.2 25.04 17.1 25.72a1.5 1.5 0 001.8 0C19.8 43.04 36 30.56 36 18 36 8.059 27.941 0 18 0z" fill="#C8922A"/>
         <circle cx="18" cy="18" r="7" fill="#fff"/>
         <circle cx="18" cy="18" r="4" fill="#C8922A"/>
-      </svg>`;
-    markerEl.style.cursor = 'pointer';
+      </svg>`,
+      className: '',
+      iconSize: [36, 44],
+      iconAnchor: [18, 44],
+      popupAnchor: [0, -44],
+    });
 
     const t0 = translations[currentLang];
-    const popup = new mapboxgl.Popup({ offset: 32, closeButton: true })
-      .setHTML(`<div class="popup-inner"><strong>${t0.popup_name}</strong>${t0.popup_desc}</div>`);
-
-    window._mapPopup = popup;
-
-    new mapboxgl.Marker(markerEl)
-      .setLngLat([-0.125, 38.623])
-      .setPopup(popup)
+    const marker = L.marker([38.623, -0.125], { icon: markerIcon })
+      .bindPopup(`<div class="popup-inner"><strong>${t0.popup_name}</strong>${t0.popup_desc}</div>`)
       .addTo(map);
 
-    map.on('load', () => popup.addTo(map));
-
-    // Navigation control (zoom +/-)
-    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
+    marker.openPopup();
+    window._leafletMarker = marker;
 
     /* ══════════════════════════════════
        SCROLL REVEAL
